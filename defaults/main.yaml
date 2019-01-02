@@ -1,4 +1,4 @@
 ---
 dionaea_ip_address: ""
-chn_server_url: "http://localhost"
+chn_server: "http://localhost"
 chn_version_tag: "latest"
