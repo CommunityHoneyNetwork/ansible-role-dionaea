@@ -1,0 +1,5 @@
+---
+
+dionaea_storage_path: "/srv/dionaea"
+
+global_packages: []

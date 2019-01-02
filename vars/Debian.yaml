@@ -1,0 +1,6 @@
+---
+dionaea_env_file: /etc/default/dionaea
+
+os_packages:
+  - python3-pip
+  - docker.io

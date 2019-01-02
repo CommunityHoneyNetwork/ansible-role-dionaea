@@ -1,0 +1,24 @@
+DEBUG=true
+
+# IP Address of the honeypot
+# Leaving this blank will default to the docker container IP
+IP_ADDRESS={{ dionaea_ip_address }}
+
+CHN_SERVER="{{ chn_server_url }}"
+DEPLOY_KEY="{{ chn_deploy_key }}"
+DIONAEA_JSON="/etc/dionaea/dionaea.json"
+
+# Network options
+LISTEN_ADDRESSES="0.0.0.0"
+LISTEN_INTERFACES="eth0"
+
+
+# Service options
+# blackhole, epmap, ftp, http, memcache, mirror, mongo, mqtt, mssql, mysql, pptp, sip, smb, tftp, upnp
+SERVICES=(ftp mssql smb)
+
+
+# Logging options
+HPFEEDS_ENABLED=true
+FEEDS_SERVER="localhost"
+FEEDS_SERVER_PORT=10000

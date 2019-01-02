@@ -1,0 +1,51 @@
+---
+dependency:
+  name: gilt
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+  options:
+    config-file: './.yamllint'
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        chn_deploy_key: 'fake_deploy_key'
+    host_vars:
+      dionaea-ubuntu18:
+        ansible_python_interpreter: "/usr/bin/python3"
+      dionaea-ubuntu16:
+        ansible_python_interpreter: "/usr/bin/python3"
+  lint:
+    name: ansible-lint
+    options:
+      exclude:
+        - molecule/roles/
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+
+platforms:
+  - name: dionaea-ubuntu18
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    config_options:
+      synced_folder: True
+    box: ubuntu/bionic64
+    memory: 1024
+  - name: dionaea-ubuntu16
+    interfaces:
+      - auto_config: true
+        network_name: private_network
+        type: dhcp
+    config_options:
+      synced_folder: True
+    box: ubuntu/xenial64
+    memory: 1024

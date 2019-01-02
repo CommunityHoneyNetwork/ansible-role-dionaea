@@ -1,0 +1,62 @@
+---
+
+- name: Update apt cache
+  apt:
+    update_cache: true
+    cache_valid_time: 86400
+  when: ansible_os_family == 'Debian'
+
+- name: Gather | os info
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_os_family }}.yaml"
+  tags: vars
+
+- name: Storage Path
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ dionaea_storage_path }}"
+    - "{{ dionaea_storage_path }}/persist"
+
+
+- name: Install system level packages
+  package:
+    name: "{{ item }}"
+  with_items: "{{ global_packages + os_packages }}"
+
+- name: Install python modules
+  pip:
+    name: docker
+
+- name: Enable docker
+  service:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Sysconfig file
+  template:
+    src: dionaea.sysconfig.j2
+    dest: "{{ dionaea_storage_path }}/dionaea.sysconfig"
+
+- name: Pull in dionaea images
+  docker_image:
+    name: "{{ item }}"
+    timeout: 300
+  with_items:
+    - "stingar/dionaea:{{ chn_version_tag }}"
+
+- name: Deploy container
+  docker_container:
+    name: dionaea
+    image: "stingar/dionaea:{{ chn_version_tag }}"
+    state: started
+    log_driver: journald
+    restart_policy: always
+    volumes:
+      - "{{ dionaea_storage_path }}/dionaea.sysconfig:{{ dionaea_env_file }}"
+      - "{{ dionaea_storage_path }}/persist:/etc/dionaea"
+  tags:
+    - docker
