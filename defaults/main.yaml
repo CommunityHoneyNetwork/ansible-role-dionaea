@@ -2,3 +2,4 @@
 dionaea_ip_address: ""
 chn_server: "http://localhost"
 chn_version_tag: "latest"
+hpfeeds_server: "{{ chn_server.split('://')[1] }}"
